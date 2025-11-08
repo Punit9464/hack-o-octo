@@ -7,7 +7,7 @@ async function postController (req, res) {
     const text = req.body.SpeechResult || "";
     const conf = Number(req.body.Confidence || 0);
     const twiml = new twilio.twiml.VoiceResponse();
-
+    
     if (!text || conf < 0.35) {
         const g = twiml.gather({
             input: "speech", language: LOCALE, speechTimeout: "auto",

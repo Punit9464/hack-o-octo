@@ -1,12 +1,16 @@
 import { GoogleGenAI } from '@google/genai';
 
 async function getAiAdvice(text, locale = "hi-IN") {
+    console.log(text);
+
 const geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
     const prompt = `
 You are a helpful health assistant for rural Indian callers.
 Your goal is to provide **practical, useful, and immediately applicable guidance.**
 
 Rules:
+- Don't ask too much questions and answer in a single go as per the problem of the user
+- Just make it sure you are crisp
 - Reply in **very simple ${locale === "hi-IN" ? "Hindi" : "English"}**.
 - Understand symptoms and explain them simply.
 - Give **home remedies and daily care steps** first.
