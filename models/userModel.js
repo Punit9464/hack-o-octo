@@ -5,6 +5,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        enum: ['male', 'female'],
+    },
     age: {
         type: Number,
         required: true,
@@ -16,6 +20,11 @@ const userSchema = new Schema({
     medicalIssue: {
         type: String,
         required: true
+    },
+    mobile: {
+        type: Number,
+        max: 10,
+        min: 10
     }
 });
 
