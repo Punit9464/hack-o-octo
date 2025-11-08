@@ -1,0 +1,31 @@
+{
+  "name": "hack-o-octo",
+  "version": "1.0.0",
+  "description": "An AI Calling Agent for helping out in terms of healthcare for rural areas",
+  "keywords": [
+    "ai",
+    "calling-agent",
+    "healthcare"
+  ],
+  "homepage": "https://github.com/Punit9464/hack-o-octo#readme",
+  "bugs": {
+    "url": "https://github.com/Punit9464/hack-o-octo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Punit9464/hack-o-octo.git"
+  },
+  "license": "ISC",
+  "author": "Punit, Mansi, Vansh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.19.3",
+    "nodemon": "^3.1.10",
+    "twilio": "^5.10.4"
+  }
+}
