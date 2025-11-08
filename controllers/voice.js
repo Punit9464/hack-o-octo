@@ -1,6 +1,8 @@
 import twilio from "twilio";
+import initSession from "../store/addUser.js";
 
 const postController = async (req, res, next) => {
+    initSession(req.body.From);
     const twiml = new twilio.twiml.VoiceResponse();
     const g = twiml.gather({
         input: "speech", language: "hi-IN", speechTimeout: "auto",
