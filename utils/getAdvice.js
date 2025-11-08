@@ -1,4 +1,3 @@
-process.loadEnvFile('.env');
 import { GoogleGenAI } from '@google/genai';
 
 async function getAiAdvice(text, locale = "hi-IN") {
