@@ -6,9 +6,17 @@ async function pickNearestHospital(location) {
 
   const res = await fetchRes.json();
 
-  // lets fnd
-
   const hospitals = res.records;
+
+  const nearBy = hospitals.filter((hospital) => {
+    (hospital.state && hospital.state.trim().toLowerCase().includes(location)) ||
+    (hospital._location && hospital._location.trim().toLowerCase().includes(location))
+  });
+
+  console.log(nearBy);
+  if(!nearBy.length) {
+    console.log(hospitals);
+  }
 }
 
 export default pickNearestHospital;
