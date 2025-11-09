@@ -69,7 +69,7 @@ const fetchHospital = async(location) => {
     
     const hs = hospitals.length ? hospitals[0] : null;
     if(!hs) {
-      const file = await import("../hospitals.json");
+      const file = await import("../hospitals.json", { assert: { type: "json" }});
       const hss = file.filter((h) => {
         (h.pincode && h.pincode === location.pincode) || 
         (h.city && h.city.includes("Chandigarh"))
