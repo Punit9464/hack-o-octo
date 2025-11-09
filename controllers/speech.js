@@ -19,27 +19,40 @@ async function postController (req, res) {
     }
 
     const lower = text.toLowerCase();
-    const wantsAppointment = [
-        "appointment", "token", "doctor", "check up", "checkup",
-        "hospital", "aspatal", "milna", "dikhaana", "opd", "नियुक्ति", "अपॉइंटमेंट", "emergency"
-    ].some(word => lower.includes(word));
+    // const wantsAppointment = [
+    //     "appointment", "token", "doctor", "check up", "checkup",
+    //     "hospital", "aspatal", "milna", "dikhaana", "opd", "नियुक्ति", "अपॉइंटमेंट", "emergency"
+    // ].some(word => lower.includes(word));
 
-    if (wantsAppointment) {
-        const g = twiml.gather({
-            input: "speech", language: LOCALE, speechTimeout: "auto",
-            action: "/ask_location", method: "POST"
-        });
-        g.say({ language: LOCALE, voice: VOICE },
-            "Aap kis shehar ya gaon se bol rahe hain? Kripya apne shehar ka naam boliye.");
-        return res.type("text/xml").send(twiml.toString());
-    }
+    // if (wantsAppointment) {
+    //     const g = twiml.gather({
+    //         input: "speech", language: LOCALE, speechTimeout: "auto",
+    //         action: "/ask_location", method: "POST"
+    //     });
+    //     g.say({ language: LOCALE, voice: VOICE },
+    //         "Aap kis shehar ya gaon se bol rahe hain? Kripya apne shehar ka naam boliye.");
+    //     return res.type("text/xml").send(twiml.toString());
+    // }
 
     let advice;
     try { advice = await getAiAdvice(req.body.From, text, LOCALE); changeContext(req.body.From, text); }
     catch { advice = "Filhaal salaah dena sambhav nahi. Kripya kuch der baad koshish karein."; }
 
     twiml.say({ language: LOCALE, voice: VOICE }, advice);
+    if(advice.includes("गंभीर") || advice.includes("Critical") || advice.includes("नाजुक")) {
+        const ctx = twiml.gather({
+            input: "dtmf",
+            numDigits: 1,
+            method: "POST",
+            action: "/options"
+        });
 
+        ctx.say({ language: LOCALE, voice: VOICE}, "Yeh samasya gambhir lag rahi hai. " +
+    "Baat jaari rakhne ke liye 1 dabaiye. " +
+    "Aspatal me appointment book karne ke liye 2 dabaiye. " +
+    "Call band karne ke liye 3 dabaiye.");
+        return res.type("text/xml").send(twiml.toString());
+    }
     const g2 = twiml.gather({
         input: "speech", language: LOCALE, speechTimeout: "auto",
         action: "/followup", method: "POST"
@@ -50,4 +63,4 @@ async function postController (req, res) {
 }
 
 const controllers = { postController };
-export default controllers;
+export default controllers; 

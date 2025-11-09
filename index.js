@@ -5,6 +5,7 @@ import voiceRouter from "./routes/voiceRouter.js";
 import speechRouter from "./routes/speechRouter.js";
 import locationRouter from "./routes/location.js";
 import followUpRouter from "./routes/followUp.js";
+import optionRouter from "./routes/optionsRouter.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use("/voice", voiceRouter);
 app.use("/process_speech", speechRouter);
 app.use("/ask_location", locationRouter);
 app.use("/followup", followUpRouter);
+app.use("/options", optionRouter);
 app.get("/", (_, r) => r.send("OK"));
 app.listen(process.env.PORT || 3000,async  () => {
     console.log("voice server up");

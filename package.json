@@ -26,10 +26,13 @@
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "fs": "^0.0.1-security",
+    "indian-pincode-validator": "^2.0.0",
     "JSONStream": "^1.3.5",
     "mongoose": "^8.19.3",
     "ngrok": "^5.0.0-beta.2",

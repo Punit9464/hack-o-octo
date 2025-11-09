@@ -12,7 +12,7 @@ async function bookToken(hospitalName) {
         : token <= 40 ? "10 se 11 baje"
             : "11 se 12 baje";
 
-    return { token, timeSlot };
+    return { token, timeSlot, hospitalName };
 }
 
 export default bookToken;

@@ -1,31 +1,46 @@
-const postController = async (req, res) => {
-    const spokenLocation = (req.body.SpeechResult || "").toLowerCase();
-    console.log(spokenLocation);
-    const hospital = await pickNearestHospital(spokenLocation);
+import twilio from "twilio";
+const LOCALE = 'hi-In';
+const VOICE = 'Polly.Aditi';
+
+import { validate, getDetails } from 'indian-pincode-validator';
+import fetchHospital from "../utils/pickNearestHospital.js";
+import bookToken from "../utils/bookToken.js";
+
+const postController = async(req, res, next) => {
+    const digits = req.body.Digits;
+    console.log(digits);
 
     const twiml = new twilio.twiml.VoiceResponse();
 
-    if (!hospital) {
+    const valid = validate(digits)?.valid;
+    console.log(valid);
+    if(!valid) {
         const g = twiml.gather({
-            input: "speech", language: LOCALE, speechTimeout: "auto",
-            action: "/ask_location", method: "POST"
+            input: "dtmf",
+            numDigits: 6,
+            action: "/ask_location",
+            method: "POST"
         });
-        g.say({ language: LOCALE, voice: VOICE },
-            "Maaf kijiye, is shehar ke aspatal ka record nahi mila. Kripya shehar ka naam dobara boliye.");
+
+        g.say("Kripya krke sahi pincode de");
         return res.type("text/xml").send(twiml.toString());
     }
 
-    const { token, timeSlot } = bookToken(hospital.name);
+    const location = getDetails(digits);
+    console.log(location);
+    const hs = await fetchHospital(location);
+    console.log(hs);
+    if(!hs) {
+        twiml.say({ language: LOCALE, voice: VOICE }, "Sorry mujhe koi hospital nhi mil paya hai, please apne nazdiki swasthya kendra phuche.");
+        return res.type("text/xml").send(twiml.toString());
+    }
 
-    twiml.say({ language: LOCALE, voice: VOICE },
-        `Appointment safalta se book ho gaya hai.
-     Aspatal: ${hospital.name}.
-     Token Number: ${token}.
-     Reporting Samay: ${timeSlot}.
-     Kripya samay se pahunch jaiye.`);
+    const { timeSlot, token, hospitalName } = await bookToken(hs.name);
 
+    twiml.say({ language: LOCALE, voice: VOICE }, `Apki appointment book ho chuki hai, hospital ka naam: ${hospitalName}, samay hai: ${timeSlot}, aur apka Token hai: ${token}`);
+    twiml.say({ language: LOCALE, voice: VOICE }, `Apka Dhanyawad humse judne ke liye, aap apna dhyan rkhe, aapka din shubh ho.`);
     twiml.hangup();
-    res.type("text/xml").send(twiml.toString());
+    return res.type("text/xml").send(twiml.toString());
 }
 
 const controllers = { postController };
