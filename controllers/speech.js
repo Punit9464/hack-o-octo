@@ -17,29 +17,16 @@ async function postController (req, res) {
         g.say({ language: LOCALE, voice: VOICE }, "Maaf kijiye, kripya tezz aur saaf boliye.");
         return res.type("text/xml").send(twiml.toString());
     }
-
-    const lower = text.toLowerCase();
-    // const wantsAppointment = [
-    //     "appointment", "token", "doctor", "check up", "checkup",
-    //     "hospital", "aspatal", "milna", "dikhaana", "opd", "नियुक्ति", "अपॉइंटमेंट", "emergency"
-    // ].some(word => lower.includes(word));
-
-    // if (wantsAppointment) {
-    //     const g = twiml.gather({
-    //         input: "speech", language: LOCALE, speechTimeout: "auto",
-    //         action: "/ask_location", method: "POST"
-    //     });
-    //     g.say({ language: LOCALE, voice: VOICE },
-    //         "Aap kis shehar ya gaon se bol rahe hain? Kripya apne shehar ka naam boliye.");
-    //     return res.type("text/xml").send(twiml.toString());
-    // }
-
+    
     let advice;
     try { advice = await getAiAdvice(req.body.From, text, LOCALE); changeContext(req.body.From, text); }
     catch { advice = "Filhaal salaah dena sambhav nahi. Kripya kuch der baad koshish karein."; }
 
     twiml.say({ language: LOCALE, voice: VOICE }, advice);
-    if(advice.includes("गंभीर") || advice.includes("Critical") || advice.includes("नाजुक")) {
+    console.log(text);
+    console.log(advice);
+    
+    if(advice.includes("गंभीर") || text.includes("अपॉइंटमेंट") || text.includes("नियुक्ति") || advice.includes("Critical") || advice.includes("नाजुक")) {
         const ctx = twiml.gather({
             input: "dtmf",
             numDigits: 1,

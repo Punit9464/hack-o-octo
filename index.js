@@ -21,3 +21,6 @@ app.get("/", (_, r) => r.send("OK"));
 app.listen(process.env.PORT || 3000,async  () => {
     console.log("voice server up");
 });
+
+process.on("uncaughtException", console.error);
+process.on("unhandledRejection", console.error);
